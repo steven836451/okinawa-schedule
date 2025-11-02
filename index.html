@@ -1,603 +1,719 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>郵輪岸上觀光行程表</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .info-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .info-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.5s ease-out;
+      }
+
+      .info-card h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .tab-button {
+        background: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+      }
+
+      .tab-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .tab-button.active {
+        background: #667eea;
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.5s;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .schedule-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .time-slot {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.3s;
+      }
+
+      .time-slot:hover {
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .time {
+        font-weight: bold;
+        color: #667eea;
+        min-width: 120px;
+      }
+
+      .activity {
+        flex: 1;
+      }
+
+      .activity-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .activity-note {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+
+      .badge-meal {
+        background: #ffeaa7;
+        color: #fdcb6e;
+      }
+
+      .badge-shopping {
+        background: #fab1a0;
+        color: #e17055;
+      }
+
+      .badge-nature {
+        background: #a8e6cf;
+        color: #00b894;
+      }
+
+      .badge-culture {
+        background: #c7ecee;
+        color: #22a6b3;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .stat-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .stat-label {
+        color: #666;
+        margin-top: 5px;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
-        
-        body {
-            font-family: 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
-        
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        to {
+          opacity: 1;
         }
-        
-        .info-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .info-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        .info-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-        
+      }
+
+      @media (max-width: 768px) {
         .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+          justify-content: center;
         }
-        
+
         .tab-button {
-            background: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
+          font-size: 14px;
+          padding: 10px 20px;
         }
-        
-        .tab-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        
-        .tab-button.active {
-            background: #667eea;
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .schedule-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .time-slot {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-left: 4px solid #667eea;
-            margin-bottom: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .time-slot:hover {
-            transform: translateX(10px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
+
         .time {
-            font-weight: bold;
-            color: #667eea;
-            min-width: 120px;
+          min-width: 80px;
+          font-size: 14px;
         }
-        
-        .activity {
-            flex: 1;
-        }
-        
-        .activity-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .activity-note {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        
-        .badge-meal {
-            background: #ffeaa7;
-            color: #fdcb6e;
-        }
-        
-        .badge-shopping {
-            background: #fab1a0;
-            color: #e17055;
-        }
-        
-        .badge-nature {
-            background: #a8e6cf;
-            color: #00b894;
-        }
-        
-        .badge-culture {
-            background: #c7ecee;
-            color: #22a6b3;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .stat-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .tabs {
-                justify-content: center;
-            }
-            
-            .tab-button {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
-            
-            .time {
-                min-width: 80px;
-                font-size: 14px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>🚢 郵輪岸上觀光行程表 🏝️</h1>
-        
-        <div class="info-cards">
-            <div class="info-card">
-                <h3>👥 團體資訊</h3>
-                <p>總人數：15位</p>
-                <p>車輛：2台10人座</p>
-                <p>特殊需求：半數年長者</p>
-            </div>
-            <div class="info-card">
-                <h3>⏰ 時間安排</h3>
-                <p>包車時間：每日8小時</p>
-                <p>實際遊覽：8小時</p>
-                <p>Buffer：上下船各1小時</p>
-            </div>
-            <div class="info-card">
-                <h3>💰 預算參考</h3>
-                <p>每人每日：約6,000-8,000日圓</p>
-                <p>三日總計：約20,000日圓</p>
-                <p>約合台幣：6,000元</p>
-            </div>
+      <h1>🚢 郵輪岸上觀光行程表 🏝️</h1>
+
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>👥 團體資訊</h3>
+          <p>榮耀號行程：1/17 18:00 - 1/21 07:00</p>
+          <p>總人數：15位</p>
+          <p>車輛：2台</p>
+          <p>包車服務：每日7-8小時</p>
         </div>
-        
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab('day1', this)">1/18 宮古島</button>
-            <button class="tab-button" onclick="showTab('day2', this)">1/19 沖繩本島</button>
-            <button class="tab-button" onclick="showTab('day3', this)">1/20 石垣島</button>
-            <button class="tab-button" onclick="showTab('notes', this)">注意事項</button>
+        <div class="info-card">
+          <h3>⏰ 時間安排</h3>
+          <p>包車時間：每日7-8小時</p>
+          <p>實際遊覽：7-8小時</p>
+          <p>Buffer：下船2小時，上船1小時</p>
         </div>
-        
-        <div id="day1" class="tab-content active">
-            <div class="schedule-card">
-                <h2>🏖️ 1/18 (六) 宮古島</h2>
-                <p style="color: #666; margin: 10px 0;">船隻：08:00抵達 | 18:00啟航</p>
-                
-                <div class="time-slot">
-                    <div class="time">09:00-09:30</div>
-                    <div class="activity">
-                        <div class="activity-name">港口集合出發</div>
-                        <div class="activity-note">兩台車同時出發</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">09:30-10:30</div>
-                    <div class="activity">
-                        <div class="activity-name">與那霸前濱海灘<span class="badge badge-nature">自然</span></div>
-                        <div class="activity-note">東洋第一美海灘，輕鬆散步或涼亭休息</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">10:30-11:30</div>
-                    <div class="activity">
-                        <div class="activity-name">雪鹽製鹽所<span class="badge badge-shopping">購物</span></div>
-                        <div class="activity-note">參觀製程、品嚐雪鹽冰淇淋、購買伴手禮</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">11:30-13:30</div>
-                    <div class="activity">
-                        <div class="activity-name">市區午餐<span class="badge badge-meal">用餐</span></div>
-                        <div class="activity-note">推薦：古謝そば屋或海鮮料理（2小時含休息）</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">13:30-14:30</div>
-                    <div class="activity">
-                        <div class="activity-name">宮古島海中公園<span class="badge badge-culture">觀光</span></div>
-                        <div class="activity-note">海底觀察館，涼爽舒適，慢慢欣賞海底世界</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">14:30-16:00</div>
-                    <div class="activity">
-                        <div class="activity-name">島の駅みやこ<span class="badge badge-shopping">購物</span></div>
-                        <div class="activity-note">物產中心，選購特產，有休息區可喝茶</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">16:00-17:00</div>
-                    <div class="activity">
-                        <div class="activity-name">返回港口</div>
-                        <div class="activity-note">預留充足時間登船</div>
-                    </div>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value">4</div>
-                        <div class="stat-label">主要景點</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">8小時</div>
-                        <div class="stat-label">遊覽時間</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">輕鬆</div>
-                        <div class="stat-label">行程強度</div>
-                    </div>
-                </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-button active" onclick="showTab('day1', this)">
+          1/18 宮古島
+        </button>
+        <button class="tab-button" onclick="showTab('day2', this)">
+          1/19 沖繩本島
+        </button>
+        <button class="tab-button" onclick="showTab('day3', this)">
+          1/20 石垣島
+        </button>
+        <button class="tab-button" onclick="showTab('notes', this)">
+          注意事項
+        </button>
+      </div>
+
+      <div id="day1" class="tab-content active">
+        <div class="schedule-card">
+          <h2>🖐️ 1/18 (六) 宮古島</h2>
+          <p style="color: #666; margin: 10px 0">船隻：08:00抵達 | 18:00啟航</p>
+          <p
+            style="
+              background: #f0f8ff;
+              padding: 10px;
+              border-radius: 8px;
+              margin: 10px 0;
+            "
+          >
+            📌 推薦包車服務：<a
+              href="https://www.kkday.com/zh-tw/product/139514?cid=4904&ud1=detail-share&ud2=app-ios"
+              target="_blank"
+              style="color: #667eea; text-decoration: underline"
+            >
+              KKday宮古島7小時包車（點擊查看詳情）</a
+            >
+            <br />
+            🚐 <strong>說明：</strong>建議搭配
+            <strong>10人座 + 5人座</strong> 共兩台車， 一日約
+            <strong>27,000 台幣</strong
+            >，最多包7小時，含司機與油資(似乎無中文司機)。
+          </p>
+
+          <div class="time-slot">
+            <div class="time">10:00-10:30</div>
+            <div class="activity">
+              <div class="activity-name">港口(平良港)集合出發</div>
+              <div class="activity-note">
+                兩台車同時出發，前往與那霸前濱海灘
+              </div>
             </div>
-        </div>
-        
-        <div id="day2" class="tab-content">
-            <div class="schedule-card">
-                <h2>🏰 1/19 (日) 沖繩本島</h2>
-                <p style="color: #666; margin: 10px 0;">船隻：07:00抵達 | 19:00啟航</p>
-                
-                <div class="time-slot">
-                    <div class="time">08:00-09:30</div>
-                    <div class="activity">
-                        <div class="activity-name">港口出發前往北部</div>
-                        <div class="activity-note">車程約90分鐘</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">09:30-11:30</div>
-                    <div class="activity">
-                        <div class="activity-name">美麗海水族館<span class="badge badge-culture">觀光</span></div>
-                        <div class="activity-note">黑潮之海、海豚表演，館內涼爽適合慢遊</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">11:30-13:30</div>
-                    <div class="activity">
-                        <div class="activity-name">海洋博公園午餐<span class="badge badge-meal">用餐</span></div>
-                        <div class="activity-note">園區內餐廳選擇多，可欣賞海景</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">13:30-14:30</div>
-                    <div class="activity">
-                        <div class="activity-name">御菓子御殿<span class="badge badge-shopping">購物</span></div>
-                        <div class="activity-note">名護店，紅芋塔試吃、購買伴手禮</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">14:30-15:00</div>
-                    <div class="activity">
-                        <div class="activity-name">返回那霸市區</div>
-                        <div class="activity-note">車程約30分鐘</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">15:00-16:30</div>
-                    <div class="activity">
-                        <div class="activity-name">國際通<span class="badge badge-shopping">購物</span></div>
-                        <div class="activity-note">自由購物或咖啡廳休息</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">16:30-18:00</div>
-                    <div class="activity">
-                        <div class="activity-name">返回港口</div>
-                        <div class="activity-note">預留充足時間登船</div>
-                    </div>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value">4</div>
-                        <div class="stat-label">主要景點</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">10小時</div>
-                        <div class="stat-label">遊覽時間</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">中等</div>
-                        <div class="stat-label">行程強度</div>
-                    </div>
-                </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">10:30-11:30</div>
+            <div class="activity">
+              <div class="activity-name">
+                與那霸前濱海灘<span class="badge badge-nature">自然</span>
+              </div>
+              <div class="activity-note">
+                東洋第一美海灘，輕鬆散步或涼亭休息
+              </div>
             </div>
-        </div>
-        
-        <div id="day3" class="tab-content">
-            <div class="schedule-card">
-                <h2>🌺 1/20 (一) 石垣島</h2>
-                <p style="color: #666; margin: 10px 0;">船隻：09:00抵達 | 19:00啟航</p>
-                
-                <div class="time-slot">
-                    <div class="time">10:00-10:30</div>
-                    <div class="activity">
-                        <div class="activity-name">港口出發</div>
-                        <div class="activity-note">前往川平灣</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">10:30-12:00</div>
-                    <div class="activity">
-                        <div class="activity-name">川平灣<span class="badge badge-nature">自然</span></div>
-                        <div class="activity-note">米其林三星景點，可選玻璃船或岸邊賞景</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">12:00-14:00</div>
-                    <div class="activity">
-                        <div class="activity-name">川平灣午餐<span class="badge badge-meal">用餐</span></div>
-                        <div class="activity-note">必嚐石垣牛料理，餐後可休息</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">14:00-14:30</div>
-                    <div class="activity">
-                        <div class="activity-name">前往市區</div>
-                        <div class="activity-note">車程約30分鐘</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">14:30-15:30</div>
-                    <div class="activity">
-                        <div class="activity-name">桃林寺+市區散策<span class="badge badge-culture">文化</span></div>
-                        <div class="activity-note">輕鬆參拜，附近街道漫步</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">15:30-17:00</div>
-                    <div class="activity">
-                        <div class="activity-name">EUGLENA MALL<span class="badge badge-shopping">購物</span></div>
-                        <div class="activity-note">最後購物機會，有冷氣座椅</div>
-                    </div>
-                </div>
-                
-                <div class="time-slot">
-                    <div class="time">17:00-18:00</div>
-                    <div class="activity">
-                        <div class="activity-name">返回港口</div>
-                        <div class="activity-note">預留充足時間登船</div>
-                    </div>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">主要景點</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">8小時</div>
-                        <div class="stat-label">遊覽時間</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">輕鬆</div>
-                        <div class="stat-label">行程強度</div>
-                    </div>
-                </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">11:30-13:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                市區午餐<span class="badge badge-meal">用餐</span>
+              </div>
+              <div class="activity-note">推薦：古謝そば屋或海鮮料理</div>
             </div>
-        </div>
-        
-        <div id="notes" class="tab-content">
-            <div class="schedule-card">
-                <h2>📋 重要注意事項</h2>
-                
-                <h3 style="color: #667eea; margin-top: 20px;">👴 年長者照護</h3>
-                <ul style="line-height: 2; margin-left: 20px;">
-                    <li>每個景點都有休息區，避免長時間步行</li>
-                    <li>選擇平坦無障礙路線</li>
-                    <li>建議準備摺疊椅或手杖</li>
-                    <li>每2小時安排一次較長休息</li>
-                </ul>
-                
-                <h3 style="color: #667eea; margin-top: 20px;">🎒 必備物品</h3>
-                <ul style="line-height: 2; margin-left: 20px;">
-                    <li>防曬用品（帽子、防曬乳、陽傘）</li>
-                    <li>舒適好走的鞋子</li>
-                    <li>個人常用藥品</li>
-                    <li>現金（部分店家不收信用卡）</li>
-                    <li>購物袋（日本超市需購買塑膠袋）</li>
-                </ul>
-                
-                <h3 style="color: #667eea; margin-top: 20px;">👥 團體管理</h3>
-                <ul style="line-height: 2; margin-left: 20px;">
-                    <li>建立WhatsApp群組方便聯繫</li>
-                    <li>準備識別標誌（團體帽子或胸章）</li>
-                    <li>緊急聯絡卡（寫上領隊電話、船名、車牌）</li>
-                    <li>固定上車點避免團員走失</li>
-                </ul>
-                
-                <h3 style="color: #667eea; margin-top: 20px;">🔄 備案安排</h3>
-                <ul style="line-height: 2; margin-left: 20px;">
-                    <li>天氣不佳川平灣改為石垣市區觀光</li>
-                    <li>團員疲憊可縮短行程提早回船</li>
-                    <li>每個點可視情況調整停留時間</li>
-                    <li>保留彈性調整空間</li>
-                </ul>
-                
-                <h3 style="color: #667eea; margin-top: 20px;">💰 費用預估（每人）</h3>
-                <ul style="line-height: 2; margin-left: 20px;">
-                    <li>包車費用：3天共約3,000-4,000台幣</li>
-                    <li>門票：水族館2,000円、玻璃船1,200円、鍾乳洞1,200円</li>
-                    <li>餐費：每餐約1,500-3,000円</li>
-                    <li>建議預備金：約15,000-20,000円</li>
-                </ul>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">13:00-14:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                雪鹽製鹽所<span class="badge badge-shopping">購物</span>
+              </div>
+              <div class="activity-note">
+                參觀製程、品嚐雪鹽冰淇淋、購買伴手禮
+              </div>
             </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">14:00-15:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                宮古島海中公園<span class="badge badge-culture">觀光</span>
+              </div>
+              <div class="activity-note">
+                海底觀察館，涼爽舒適，慢慢欣賞海底世界
+              </div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">15:00-16:30</div>
+            <div class="activity">
+              <div class="activity-name">
+                島の駅みやこ<span class="badge badge-shopping">購物</span>
+              </div>
+              <div class="activity-note">
+                物產中心，選購特產，有休息區可喝茶
+              </div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">16:30-17:00</div>
+            <div class="activity">
+              <div class="activity-name">返回港口(平良港)</div>
+              <div class="activity-note">預留充足時間登船（包車7小時結束）</div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-value">4</div>
+              <div class="stat-label">主要景點</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">7小時</div>
+              <div class="stat-label">遊覽時間</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">輕鬆</div>
+              <div class="stat-label">行程強度</div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div id="day2" class="tab-content">
+        <div class="schedule-card">
+          <h2>🏰 1/19 (日) 沖繩本島</h2>
+          <p style="color: #666; margin: 10px 0">船隻：07:00抵達 | 19:00啟航</p>
+          <p
+            style="
+              background: #f0f8ff;
+              padding: 10px;
+              border-radius: 8px;
+              margin: 10px 0;
+            "
+          >
+            📌 推薦包車服務：<a
+              href="https://www.kkday.com/zh-tw/product/141951?cid=4904&ud1=detail-share&ud2=app-ios"
+              target="_blank"
+              style="color: #667eea; text-decoration: underline"
+            >
+              KKday沖繩本島8小時包車（點擊查看詳情）</a
+            >
+            <br />
+            🚐 <strong>說明：</strong>建議搭配
+            <strong>10人座 + 7人座</strong> 共兩台車， 一日約
+            <strong>18,000 台幣</strong>，含中文司機與油資。
+          </p>
+
+          <div class="time-slot">
+            <div class="time">10:00-10:30</div>
+            <div class="activity">
+              <div class="activity-name">港口(安謝新港)集合出發</div>
+              <div class="activity-note">前往玉泉洞，車程約30分鐘</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">10:30-12:30</div>
+            <div class="activity">
+              <div class="activity-name">
+                玉泉洞王國村<span class="badge badge-nature">自然</span>
+              </div>
+              <div class="activity-note">
+                日本第二長鐘乳石洞、琉球王國村、毒蛇博物館
+              </div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">12:30-14:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                國際通午餐<span class="badge badge-meal">用餐</span>
+              </div>
+              <div class="activity-note">返回市區，牧志公設市場或當地餐廳</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">14:00-16:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                國際通購物<span class="badge badge-shopping">購物</span>
+              </div>
+              <div class="activity-note">
+                御菓子御殿、鹽屋、唐吉訶德、琉球玻璃
+              </div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">16:00-16:20</div>
+            <div class="activity">
+              <div class="activity-name">前往瀨長島</div>
+              <div class="activity-note">車程約20分鐘</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">16:20-17:30</div>
+            <div class="activity">
+              <div class="activity-name">
+                瀨長島Umikaji Terrace<span class="badge badge-nature"
+                  >自然</span
+                >
+              </div>
+              <div class="activity-note">白色地中海風建築，欣賞夕陽美景</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">17:30-18:00</div>
+            <div class="activity">
+              <div class="activity-name">返回港口(安謝新港)</div>
+              <div class="activity-note">車程約15分鐘，預留充足時間登船</div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-value">3</div>
+              <div class="stat-label">主要景點</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">8小時</div>
+              <div class="stat-label">遊覽時間</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">輕鬆</div>
+              <div class="stat-label">行程強度</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="day3" class="tab-content">
+        <div class="schedule-card">
+          <h2>🌺 1/20 (一) 石垣島</h2>
+          <p style="color: #666; margin: 10px 0">船隻：09:00抵達 | 19:00啟航</p>
+          <p
+            style="
+              background: #f0f8ff;
+              padding: 10px;
+              border-radius: 8px;
+              margin: 10px 0;
+            "
+          >
+            📌 推薦包車服務：<a
+              href="https://www.kkday.com/zh-tw/product/139514?cid=4904&ud1=detail-share&ud2=app-ios"
+              target="_blank"
+              style="color: #667eea; text-decoration: underline"
+            >
+              KKday石垣島7小時包車（點擊查看詳情）</a
+            >
+            <br />
+            🚐 <strong>說明：</strong>建議搭配
+            <strong>10人座 + 5人座</strong> 共兩台車， 一日約
+            <strong>27,000 台幣</strong
+            >，最多包7小時，含司機與油資(似乎無中文司機)。
+          </p>
+
+          <div class="time-slot">
+            <div class="time">11:00-11:30</div>
+            <div class="activity">
+              <div class="activity-name">港口(石垣新港)出發</div>
+              <div class="activity-note">前往川平灣</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">11:30-13:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                川平灣<span class="badge badge-nature">自然</span>
+              </div>
+              <div class="activity-note">
+                米其林三星景點，可選玻璃船或岸邊賞景
+              </div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">13:00-14:30</div>
+            <div class="activity">
+              <div class="activity-name">
+                川平灣午餐<span class="badge badge-meal">用餐</span>
+              </div>
+              <div class="activity-note">必嚐石垣牛料理，餐後可休息</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">14:30-15:00</div>
+            <div class="activity">
+              <div class="activity-name">前往市區</div>
+              <div class="activity-note">車程約30分鐘</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">15:00-16:00</div>
+            <div class="activity">
+              <div class="activity-name">
+                桃林寺+市區散策<span class="badge badge-culture">文化</span>
+              </div>
+              <div class="activity-note">輕鬆參拜，附近街道漫步</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">16:00-17:30</div>
+            <div class="activity">
+              <div class="activity-name">
+                EUGLENA MALL<span class="badge badge-shopping">購物</span>
+              </div>
+              <div class="activity-note">最後購物機會，有冷氣座椅</div>
+            </div>
+          </div>
+
+          <div class="time-slot">
+            <div class="time">17:30-18:00</div>
+            <div class="activity">
+              <div class="activity-name">返回港口(石垣新港)</div>
+              <div class="activity-note">預留充足時間登船（包車7小時結束）</div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-value">3</div>
+              <div class="stat-label">主要景點</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">7小時</div>
+              <div class="stat-label">遊覽時間</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">輕鬆</div>
+              <div class="stat-label">行程強度</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="notes" class="tab-content">
+        <div class="schedule-card">
+          <h2>📋 重要注意事項</h2>
+
+          <h3 style="color: #667eea; margin-top: 20px">🎒 必備物品</h3>
+          <ul style="line-height: 2; margin-left: 20px">
+            <li>護照及船卡（隨身攜帶）</li>
+            <li>防曬用品（帽子、防曬乳、太陽眼鏡）</li>
+            <li>舒適好走的鞋子</li>
+            <li>個人常用藥品</li>
+            <li>日幣現金（建議每人準備2-3萬円）</li>
+            <li>雨具（1月偶有陣雨）</li>
+            <li>相機/手機充電器</li>
+            <li>環保購物袋</li>
+          </ul>
+
+          <h3 style="color: #667eea; margin-top: 20px">
+            💰 費用預估(每人/日幣)
+          </h3>
+          <ul style="line-height: 2; margin-left: 20px">
+            <li><strong>門票費用：</strong></li>
+            <li style="margin-left: 30px">- 玉泉洞王國村：2,000円</li>
+            <li style="margin-left: 30px">- 川平灣玻璃船：1,200円(選擇性)</li>
+            <li style="margin-left: 30px">- 其他景點：多數免費</li>
+            <li><strong>餐費預算：</strong></li>
+            <li style="margin-left: 30px">- 午餐：1,500-2,500円/餐</li>
+            <li style="margin-left: 30px">- 飲料點心：500-1,000円/天</li>
+            <li><strong>購物伴手禮：</strong>5,000-10,000円(依個人需求)</li>
+            <li>
+              <strong>建議總預算：</strong>18,000-25,000円(約台幣5,400-7,500元)
+            </li>
+          </ul>
+
+          <h3 style="color: #667eea; margin-top: 20px">📄 備案安排</h3>
+          <ul style="line-height: 2; margin-left: 20px">
+            <li><strong>天氣因素：</strong></li>
+            <li style="margin-left: 30px">- 雨天：玉泉洞為室內景點不受影響</li>
+            <li style="margin-left: 30px">- 川平灣雨天改為石垣市區購物</li>
+            <li style="margin-left: 30px">- 瀨長島可改為ASHIBINAA Outlet</li>
+            <li><strong>時間調整：</strong></li>
+            <li style="margin-left: 30px">- 可依團員體力縮短購物時間</li>
+            <li style="margin-left: 30px">- 景點停留時間可彈性調整</li>
+            <li style="margin-left: 30px">- 確保17:30前返回港口</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    
+
     <script>
-        function showTab(tabName, clickedButton) {
-            // Hide all tabs
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-                tab.style.display = 'none';
-            });
-            
-            // Remove active class from all buttons
-            const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-                selectedTab.style.display = 'block';
-            }
-            
-            // Add active class to clicked button
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
-            
-            // Prevent default behavior and stop propagation
-            if (window.event) {
-                window.event.preventDefault();
-                window.event.stopPropagation();
-            }
-            
-            return false;
-        }
-        
-        // 確保DOM載入完成後初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 顯示第一個tab
-            const firstTab = document.getElementById('day1');
-            if (firstTab) {
-                firstTab.style.display = 'block';
-                firstTab.classList.add('active');
-            }
-            
-            // 為所有tab按鈕添加觸控事件支援
-            const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach((btn, index) => {
-                // 添加觸控事件監聽
-                btn.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    const tabId = ['day1', 'day2', 'day3', 'notes'][index];
-                    showTab(tabId, this);
-                }, {passive: false});
-            });
+      function showTab(tabName, clickedButton) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll(".tab-content");
+        tabs.forEach((tab) => {
+          tab.classList.remove("active");
+          tab.style.display = "none";
         });
+
+        // Remove active class from all buttons
+        const buttons = document.querySelectorAll(".tab-button");
+        buttons.forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        // Show selected tab
+        const selectedTab = document.getElementById(tabName);
+        if (selectedTab) {
+          selectedTab.classList.add("active");
+          selectedTab.style.display = "block";
+        }
+
+        // Add active class to clicked button
+        if (clickedButton) {
+          clickedButton.classList.add("active");
+        }
+
+        // Prevent default behavior and stop propagation
+        if (window.event) {
+          window.event.preventDefault();
+          window.event.stopPropagation();
+        }
+
+        return false;
+      }
+
+      // 確保DOM載入完成後初始化
+      document.addEventListener("DOMContentLoaded", function () {
+        // 顯示第一個tab
+        const firstTab = document.getElementById("day1");
+        if (firstTab) {
+          firstTab.style.display = "block";
+          firstTab.classList.add("active");
+        }
+
+        // 為所有tab按鈕添加觸控事件支援
+        const buttons = document.querySelectorAll(".tab-button");
+        buttons.forEach((btn, index) => {
+          // 添加觸控事件監聽
+          btn.addEventListener(
+            "touchstart",
+            function (e) {
+              e.preventDefault();
+              const tabId = ["day1", "day2", "day3", "notes"][index];
+              showTab(tabId, this);
+            },
+            { passive: false }
+          );
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
